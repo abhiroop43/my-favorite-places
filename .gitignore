@@ -40,3 +40,4 @@ yarn-error.*
 
 # Configurations
 App.config.js
+config.js
