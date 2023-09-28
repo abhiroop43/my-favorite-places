@@ -1,11 +1,11 @@
 import { generateUniqueId } from "../util/helper";
 
-class Place {
-  constructor(title, imageUri, address, location) {
+export class Place {
+  constructor(title, imageUri, location) {
     this.title = title;
     this.imageUri = imageUri;
-    this.address = address;
-    this.location = location; // {lat: 100, lng: 100}
+    this.address = location.address;
+    this.location = { lat: location.lat, lng: location.lng }; // {lat: 100, lng: 100}
     this.id = generateUniqueId();
   }
 }

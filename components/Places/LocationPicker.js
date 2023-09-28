@@ -6,11 +6,15 @@ import {
   useForegroundPermissions,
   PermissionStatus,
 } from "expo-location";
-import {useEffect, useState} from "react";
-import {getAddress, getMapPreview} from "../../util/location";
-import {useIsFocused, useNavigation, useRoute} from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { getAddress, getMapPreview } from "../../util/location";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
-function LocationPicker({onPickLocation}) {
+function LocationPicker({ onPickLocation }) {
   const [pickedLocation, setPicketLocation] = useState();
 
   const [locationPermissionInformation, requestPermission] =
@@ -26,20 +30,25 @@ function LocationPicker({onPickLocation}) {
     if (!(isFocused && route.params)) {
       return;
     }
-    const mapPickedLocation = route.params && {lat: route.params.pickedLat, lng: route.params.pickedLng};
+    const mapPickedLocation = route.params && {
+      lat: route.params.pickedLat,
+      lng: route.params.pickedLng,
+    };
     setPicketLocation(mapPickedLocation);
   }, [route, isFocused]);
 
   useEffect(() => {
-
     async function handleLocation() {
-      if(pickedLocation) {
-        await getAddress(pickedLocation.lat, pickedLocation.lng);
-        onPickLocation(pickedLocation);
+      if (pickedLocation) {
+        const address = await getAddress(
+          pickedLocation.lat,
+          pickedLocation.lng,
+        );
+        onPickLocation({ ...pickedLocation, address: address });
       }
     }
     handleLocation();
-    }, [pickedLocation, onPickLocation]);
+  }, [pickedLocation, onPickLocation]);
 
   async function verifyPermissions() {
     switch (locationPermissionInformation.status) {
