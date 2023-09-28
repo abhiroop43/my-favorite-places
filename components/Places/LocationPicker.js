@@ -7,7 +7,7 @@ import {
   PermissionStatus,
 } from "expo-location";
 import {useEffect, useState} from "react";
-import { getMapPreview } from "../../util/location";
+import {getAddress, getMapPreview} from "../../util/location";
 import {useIsFocused, useNavigation, useRoute} from "@react-navigation/native";
 
 function LocationPicker({onPickLocation}) {
@@ -30,7 +30,16 @@ function LocationPicker({onPickLocation}) {
     setPicketLocation(mapPickedLocation);
   }, [route, isFocused]);
 
-  useEffect(() => {onPickLocation(pickedLocation);}, [pickedLocation, onPickLocation]);
+  useEffect(() => {
+
+    async function handleLocation() {
+      if(pickedLocation) {
+        await getAddress(pickedLocation.lat, pickedLocation.lng);
+        onPickLocation(pickedLocation);
+      }
+    }
+    handleLocation();
+    }, [pickedLocation, onPickLocation]);
 
   async function verifyPermissions() {
     switch (locationPermissionInformation.status) {
